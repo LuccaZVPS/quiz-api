@@ -1,9 +1,12 @@
-import { AddAccountModel } from "@/domain/useCases/add-account";
+import { AddAccount, AddAccountModel } from "@/domain/useCases/add-account";
 import { Controller } from "../protocols/controller";
 import { EmailValidator } from "../protocols/email-validator";
 import { httpResponse } from "../protocols/http";
 export class SignUpController implements Controller {
-  constructor(private emailValidator: EmailValidator) {}
+  constructor(
+    private emailValidator: EmailValidator,
+    private addAccount: AddAccount
+  ) {}
   async handle(httpRequest: any): Promise<httpResponse> {
     try {
       if (!httpRequest.body) {
@@ -25,6 +28,7 @@ export class SignUpController implements Controller {
       if (!this.emailValidator.validate(email)) {
         return { body: `Invalid email`, statusCode: 400 };
       }
+      var created = await this.addAccount.add({ email, name, password });
       return { body: `Account created`, statusCode: 201 };
     } catch {
       return { body: `unknown error`, statusCode: 500 };

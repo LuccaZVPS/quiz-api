@@ -45,4 +45,16 @@ describe("Signup Controller", () => {
     expect((await sut.handle(fakeData)).statusCode).toBe(400);
     expect((await sut.handle(fakeData)).body).toBe("Missing password");
   });
+  test("should return 400 if name is invalid", async () => {
+    const { sut } = makeSut();
+    const fakeData = {
+      body: {
+        name: "a",
+        password: "valid_password",
+        email: "valid@gmail.com",
+      },
+    };
+    expect((await sut.handle(fakeData)).statusCode).toBe(400);
+    expect((await sut.handle(fakeData)).body).toBe("Invalid name");
+  });
 });

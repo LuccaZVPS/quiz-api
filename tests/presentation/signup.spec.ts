@@ -1,5 +1,10 @@
 import { SignUpController } from "../../src/presentation/controllers/signup";
 import { EmailValidator } from "../../src/presentation/protocols/email-validator";
+import {
+  AddAccount,
+  AddAccountModel,
+} from "../../src/domain/useCases/add-account";
+
 describe("Signup Controller", () => {
   const makeEmailValidatorStub = () => {
     class EmailValidatorStub implements EmailValidator {
@@ -9,13 +14,22 @@ describe("Signup Controller", () => {
     }
     return new EmailValidatorStub();
   };
-
+  const makeAddAccountStub = (): AddAccount => {
+    class AddAccountStub implements AddAccount {
+      async add(account: AddAccountModel): Promise<Boolean> {
+        return true;
+      }
+    }
+    return new AddAccountStub();
+  };
   const makeSut = () => {
     const EmailValidatorStub = makeEmailValidatorStub();
-    const sut = new SignUpController(EmailValidatorStub);
+    const AddAccountStub = makeAddAccountStub();
+    const sut = new SignUpController(EmailValidatorStub, AddAccountStub);
     return {
       sut,
       EmailValidatorStub,
+      AddAccountStub,
     };
   };
 
@@ -110,5 +124,19 @@ describe("Signup Controller", () => {
       });
     const response = await sut.handle(fakeData);
     expect(response.statusCode).toBe(500);
+  });
+
+  test("should call AddAccount with correct values", async () => {
+    const { sut, AddAccountStub } = makeSut();
+    const fakeData = {
+      body: {
+        name: "valid",
+        email: "valid@gmail.com",
+        password: "12345678",
+      },
+    };
+    const spy = jest.spyOn(AddAccountStub, "add");
+    await sut.handle(fakeData);
+    expect(spy).toHaveBeenCalledWith(fakeData.body);
   });
 });

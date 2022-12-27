@@ -16,9 +16,7 @@ describe("Signup Controller", () => {
   };
   const makeAddAccountStub = (): AddAccount => {
     class AddAccountStub implements AddAccount {
-      async add(account: AddAccountModel): Promise<Boolean> {
-        return true;
-      }
+      async add(account: AddAccountModel): Promise<void> {}
     }
     return new AddAccountStub();
   };
@@ -138,5 +136,32 @@ describe("Signup Controller", () => {
     const spy = jest.spyOn(AddAccountStub, "add");
     await sut.handle(fakeData);
     expect(spy).toHaveBeenCalledWith(fakeData.body);
+  });
+  test("should return status code 500 if addAccount throws an error", async () => {
+    const { sut, AddAccountStub } = makeSut();
+    const fakeData = {
+      body: {
+        name: "valid",
+        email: "valid@gmail.com",
+        password: "12345678",
+      },
+    };
+    const spy = jest.spyOn(AddAccountStub, "add").mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const response = await sut.handle(fakeData);
+    expect(response.statusCode).toBe(500);
+  });
+  test("Should return 201 if all values are correct", async () => {
+    const { sut } = makeSut();
+    const fakeDate = {
+      body: {
+        email: "valid_email",
+        name: "valid_name",
+        password: "12345678",
+      },
+    };
+    const response = await sut.handle(fakeDate);
+    expect(response.statusCode).toBe(201);
   });
 });

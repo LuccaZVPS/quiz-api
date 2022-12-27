@@ -1,3 +1,4 @@
+import { AddAccountModel } from "@/domain/useCases/add-account";
 import { Controller } from "../protocols/controller";
 import { httpResponse } from "../protocols/http";
 export class SignUpController implements Controller {
@@ -6,10 +7,14 @@ export class SignUpController implements Controller {
       return { body: "Missing body", statusCode: 400 };
     }
     const fields = ["name", "email", "password"];
-    for (const field of fields) {
+    for (var field of fields) {
       if (!httpRequest.body[field]) {
         return { body: `Missing ${field}`, statusCode: 400 };
       }
+    }
+    const { name, email, password } = httpRequest.body as AddAccountModel;
+    if (name.length < 3 || name.length > 16) {
+      return { body: `Invalid name`, statusCode: 400 };
     }
     throw new Error();
   }

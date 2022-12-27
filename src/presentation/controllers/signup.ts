@@ -5,6 +5,12 @@ export class SignUpController implements Controller {
     if (!httpRequest.body) {
       return { body: "Missing body", statusCode: 400 };
     }
+    const fields = ["name", "email", "password"];
+    for (const field of fields) {
+      if (!httpRequest.body[field]) {
+        return { body: `Missing ${field}`, statusCode: 400 };
+      }
+    }
     throw new Error();
   }
 }

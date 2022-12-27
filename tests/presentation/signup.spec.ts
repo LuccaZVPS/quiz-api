@@ -94,4 +94,21 @@ describe("Signup Controller", () => {
     await sut.handle(fakeData);
     expect(spy).toHaveBeenCalledWith(fakeData.body.email);
   });
+  test("should return status code 500 if emailValidator throws an error", async () => {
+    const { sut, EmailValidatorStub } = makeSut();
+    const fakeData = {
+      body: {
+        name: "valid",
+        email: "valid@gmail.com",
+        password: "12345678",
+      },
+    };
+    const spy = jest
+      .spyOn(EmailValidatorStub, "validate")
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
+    const response = await sut.handle(fakeData);
+    expect(response.statusCode).toBe(500);
+  });
 });

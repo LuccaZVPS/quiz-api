@@ -28,7 +28,7 @@ export class SignUpController implements Controller {
       if (!this.emailValidator.validate(email)) {
         return { body: `Invalid email`, statusCode: 400 };
       }
-      var created = await this.addAccount.add({ email, name, password });
+      await this.addAccount.add({ email, name, password });
       return { body: `Account created`, statusCode: 201 };
     } catch {
       return { body: `unknown error`, statusCode: 500 };

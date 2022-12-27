@@ -1,9 +1,21 @@
 import { SignUpController } from "../../src/presentation/controllers/signup";
+import { EmailValidator } from "../../src/presentation/protocols/email-validator";
 describe("Signup Controller", () => {
+  const makeEmailValidatorStub = () => {
+    class EmailValidatorStub implements EmailValidator {
+      validate(email: string): boolean {
+        return true;
+      }
+    }
+    return new EmailValidatorStub();
+  };
+
   const makeSut = () => {
-    const sut = new SignUpController();
+    const EmailValidatorStub = makeEmailValidatorStub();
+    const sut = new SignUpController(EmailValidatorStub);
     return {
       sut,
+      EmailValidatorStub,
     };
   };
 
@@ -68,5 +80,18 @@ describe("Signup Controller", () => {
     };
     expect((await sut.handle(fakeData)).statusCode).toBe(400);
     expect((await sut.handle(fakeData)).body).toBe("Invalid password");
+  });
+  test("should call email validator with correct values", async () => {
+    const { sut, EmailValidatorStub } = makeSut();
+    const fakeData = {
+      body: {
+        name: "valid",
+        email: "valid@gmail.com",
+        password: "12345678",
+      },
+    };
+    const spy = jest.spyOn(EmailValidatorStub, "validate");
+    await sut.handle(fakeData);
+    expect(spy).toHaveBeenCalledWith(fakeData.body.email);
   });
 });

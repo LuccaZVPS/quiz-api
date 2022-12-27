@@ -4,5 +4,5 @@ export interface AddAccountModel {
   password: string;
 }
 export interface AddAccount {
-  add: (account: AddAccountModel) => Promise<Boolean>;
+  add: (account: AddAccountModel) => Promise<void>;
 }

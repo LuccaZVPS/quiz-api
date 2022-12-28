@@ -8,4 +8,18 @@ describe("EmailValidatorAdapter", () => {
     emailValidator.validate(email);
     expect(spy).toHaveBeenCalledWith(email);
   });
+  test("should return the shame value of isEmail", () => {
+    const email = "any@gmail.com";
+    var spy = jest.spyOn(validator, "isEmail").mockImplementationOnce(() => {
+      return false;
+    });
+    var isEmail = emailValidator.validate(email);
+    expect(isEmail).toBe(false);
+    spy = jest.spyOn(validator, "isEmail").mockImplementationOnce(() => {
+      return true;
+    });
+
+    isEmail = emailValidator.validate(email);
+    expect(isEmail).toBe(true);
+  });
 });

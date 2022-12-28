@@ -11,6 +11,9 @@ export class AddAccount implements AddAccountInterface {
   ) {}
   async add(account: AddAccountModel): Promise<void> {
     account.password = this.encrypter.encrypt(account.password);
-    const isSaved = this.addAccountRepository.add(account);
+    const isSaved = await this.addAccountRepository.add(account);
+    if (!isSaved) {
+      throw new Error();
+    }
   }
 }

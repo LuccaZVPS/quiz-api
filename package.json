@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "mongodb": "^4.13.0",
     "validator": "^13.7.0"
   }
 }

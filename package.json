@@ -16,6 +16,7 @@
     "@shelf/jest-mongodb": "^4.1.4",
     "@types/bcryptjs": "^2.4.2",
     "@types/jest": "^29.2.4",
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^18.11.18",
     "@types/validator": "^13.7.10",
     "git-commit-msg-linter": "^4.5.0",

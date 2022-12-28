@@ -2,10 +2,15 @@ import {
   AddAccount as AddAccountInterface,
   AddAccountModel,
 } from "../../../src/domain/useCases/add-account";
+import { AddAccountRepository } from "../protocols/addAccountRepository";
 import { Encrypter } from "../protocols/encrypter";
 export class AddAccount implements AddAccountInterface {
-  constructor(private encrypter: Encrypter) {}
+  constructor(
+    private encrypter: Encrypter,
+    private addAccountRepository: AddAccountRepository
+  ) {}
   async add(account: AddAccountModel): Promise<void> {
-    const hashedPassword = this.encrypter.encrypt(account.password);
+    account.password = this.encrypter.encrypt(account.password);
+    const isSaved = this.addAccountRepository.add(account);
   }
 }

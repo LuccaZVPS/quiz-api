@@ -56,4 +56,21 @@ describe("Name of the group", () => {
       password: "valid_hash",
     });
   });
+
+  test("should throw if repository returns false", () => {
+    const { addAccount, addAccountRepositoryStub } = makeSut();
+    jest
+      .spyOn(addAccountRepositoryStub, "add")
+      .mockImplementationOnce(async () => {
+        return false;
+      });
+
+    expect(async () => {
+      await addAccount.add({
+        name: "any_name",
+        email: "any@gmail.com",
+        password: "12345678",
+      });
+    }).rejects.toThrow();
+  });
 });

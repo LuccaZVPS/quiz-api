@@ -1,4 +1,5 @@
 import express, { Application, urlencoded } from "express";
+import accountRoutes from "./routes/account/index";
 class App {
   app: Application;
   constructor() {
@@ -6,7 +7,9 @@ class App {
     this.middlewares();
     this.routes();
   }
-  routes() {}
+  routes() {
+    this.app.use("/", accountRoutes);
+  }
   middlewares() {
     this.app.use(express.json());
     this.app.use(urlencoded({ extended: true }));

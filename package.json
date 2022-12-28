@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --ignore-watch node_modules src/server.ts",
+    "dev": "ts-node-dev --respawn --ignore-watch node_modules src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "prepare": "husky install"
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "express": "^4.18.2",
     "mongodb": "^4.13.0",
     "validator": "^13.7.0"
   }

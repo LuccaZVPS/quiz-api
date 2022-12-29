@@ -1,5 +1,5 @@
 import { Account } from "@/domain/models/account";
 
-export interface VerfifyEmail {
-  verify: (args: AuthenticationModel) => Promise<Account>;
+export interface findByEmail {
+  verify: (email: string) => Promise<Account>;
 }

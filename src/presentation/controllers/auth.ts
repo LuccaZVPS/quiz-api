@@ -1,5 +1,6 @@
 import { badRequest, notFound, ok } from "../helpers/http-helpers";
 import { Controller } from "../protocols/controller";
+import { CreateJWT } from "../protocols/create-jwt";
 import { EmailValidator } from "../protocols/email-validator";
 import { httpRequest, httpResponse } from "../protocols/http";
 import { findByEmail as FindByEmail } from "../protocols/verify-email";
@@ -7,7 +8,8 @@ import { findByEmail as FindByEmail } from "../protocols/verify-email";
 export class AuthController implements Controller {
   constructor(
     private emailValidator: EmailValidator,
-    private findByEmail: FindByEmail
+    private findByEmail: FindByEmail,
+    private createJWT: CreateJWT
   ) {}
   async handle(response: httpRequest): Promise<httpResponse> {
     if (!response.body) {
@@ -38,6 +40,12 @@ export class AuthController implements Controller {
     if (emailExist.password !== password) {
       return notFound("email or password incorrect");
     }
+    const jwtToken = await this.createJWT.create({
+      email: emailExist.email,
+      name: emailExist.name,
+      id: emailExist.id,
+    });
+
     return ok();
   }
 }

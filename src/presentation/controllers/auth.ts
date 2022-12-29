@@ -2,9 +2,13 @@ import { badRequest, ok } from "../helpers/http-helpers";
 import { Controller } from "../protocols/controller";
 import { EmailValidator } from "../protocols/email-validator";
 import { httpRequest, httpResponse } from "../protocols/http";
+import { findByEmail as FindByEmail } from "../protocols/verify-email";
 
 export class AuthController implements Controller {
-  constructor(private emailValidator: EmailValidator) {}
+  constructor(
+    private emailValidator: EmailValidator,
+    private findByEmail: FindByEmail
+  ) {}
   async handle(response: httpRequest): Promise<httpResponse> {
     if (!response.body) {
       return badRequest(`body not provided`);
@@ -27,6 +31,7 @@ export class AuthController implements Controller {
     ) {
       return badRequest("invalid password");
     }
+    const emailExist = await this.findByEmail.verify(email);
     return ok();
   }
 }

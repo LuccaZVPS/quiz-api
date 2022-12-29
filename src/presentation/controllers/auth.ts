@@ -33,7 +33,10 @@ export class AuthController implements Controller {
     }
     const emailExist = await this.findByEmail.verify(email);
     if (!emailExist) {
-      return notFound("email not found");
+      return notFound("email or password incorrect");
+    }
+    if (emailExist.password !== password) {
+      return notFound("email or password incorrect");
     }
     return ok();
   }

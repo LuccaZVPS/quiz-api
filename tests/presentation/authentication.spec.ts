@@ -177,4 +177,18 @@ describe("Authentication Controller", () => {
       name: "any_name",
     });
   });
+  test("should retturn 500 status code if createJWT throws an error", async () => {
+    const { sut, createJWTStub } = makeSut();
+    const fakeData = {
+      body: {
+        email: "any@gmail.com",
+        password: "any_password",
+      },
+    };
+    jest.spyOn(createJWTStub, "create").mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const response = await sut.handle(fakeData);
+    expect(response.statusCode).toBe(500);
+  });
 });

@@ -2,8 +2,20 @@ import { Account } from "@/domain/models/account";
 import { AuthController } from "../../src/presentation/controllers/auth";
 import { EmailValidator } from "../../src/presentation/protocols/email-validator";
 import { findByEmail } from "../../src/presentation/protocols/verify-email";
+import {
+  CreateJWT as createJWTInterface,
+  CreateJWTModel,
+} from "../../src/presentation/protocols/create-jwt";
 
 describe("Authentication Controller", () => {
+  const makeCreateJWT = (): createJWTInterface => {
+    class CreateJWT implements createJWTInterface {
+      async create(arg: CreateJWTModel): Promise<string> {
+        return "valid_jwt";
+      }
+    }
+    return new CreateJWT();
+  };
   const makeFindByEmailStub = (): findByEmail => {
     class FindByEmail implements findByEmail {
       async verify(email: string): Promise<Account> {
@@ -28,10 +40,12 @@ describe("Authentication Controller", () => {
   const makeSut = () => {
     const emailValidator = makeEmailValidatorStub();
     const findByEmailStub = makeFindByEmailStub();
+    const createJWTStub = makeCreateJWT();
     return {
+      createJWTStub,
       findByEmailStub,
       emailValidator,
-      sut: new AuthController(emailValidator, findByEmailStub),
+      sut: new AuthController(emailValidator, findByEmailStub, createJWTStub),
     };
   };
   test("should return bad request if no body is provided", async () => {
@@ -145,5 +159,22 @@ describe("Authentication Controller", () => {
 
     const response = await sut.handle(fakeData);
     expect(response.statusCode).toEqual(404);
+  });
+
+  test("should call createJWT with correct values", async () => {
+    const { sut, createJWTStub } = makeSut();
+    const fakeData = {
+      body: {
+        email: "any@gmail.com",
+        password: "any_password",
+      },
+    };
+    const spy = jest.spyOn(createJWTStub, "create");
+    await sut.handle(fakeData);
+    expect(spy).toHaveBeenCalledWith({
+      id: "any_id",
+      email: "any@gmail.com",
+      name: "any_name",
+    });
   });
 });

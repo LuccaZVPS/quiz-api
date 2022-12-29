@@ -191,4 +191,17 @@ describe("Authentication Controller", () => {
     const response = await sut.handle(fakeData);
     expect(response.statusCode).toBe(500);
   });
+  test("should return a jwt and 200 status code", async () => {
+    const { sut } = makeSut();
+    const fakeData = {
+      body: {
+        email: "any@gmail.com",
+        password: "any_password",
+      },
+    };
+
+    const response = await sut.handle(fakeData);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ token: "valid_jwt" });
+  });
 });

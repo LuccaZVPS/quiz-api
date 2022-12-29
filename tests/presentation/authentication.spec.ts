@@ -134,4 +134,16 @@ describe("Authentication Controller", () => {
     const response = await sut.handle(fakeData);
     expect(response.statusCode).toEqual(404);
   });
+  test("should return 404 if password are differents", async () => {
+    const { sut, findByEmailStub } = makeSut();
+    const fakeData = {
+      body: {
+        email: "correct@gmail.com",
+        password: "12345678",
+      },
+    };
+
+    const response = await sut.handle(fakeData);
+    expect(response.statusCode).toEqual(404);
+  });
 });

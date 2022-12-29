@@ -1,4 +1,4 @@
-import { badRequest, ok } from "../helpers/http-helpers";
+import { badRequest, notFound, ok } from "../helpers/http-helpers";
 import { Controller } from "../protocols/controller";
 import { EmailValidator } from "../protocols/email-validator";
 import { httpRequest, httpResponse } from "../protocols/http";
@@ -32,6 +32,9 @@ export class AuthController implements Controller {
       return badRequest("invalid password");
     }
     const emailExist = await this.findByEmail.verify(email);
+    if (!emailExist) {
+      return notFound("email not found");
+    }
     return ok();
   }
 }

@@ -52,7 +52,7 @@ export class AuthController implements Controller {
         id: emailExist.id,
       });
 
-      return ok();
+      return ok({ token: jwtToken });
     } catch {
       return internalError("unknown error");
     }

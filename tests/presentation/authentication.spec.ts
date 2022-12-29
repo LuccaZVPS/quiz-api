@@ -1,7 +1,22 @@
+import { Account } from "@/domain/models/account";
 import { AuthController } from "../../src/presentation/controllers/auth";
 import { EmailValidator } from "../../src/presentation/protocols/email-validator";
+import { findByEmail } from "../../src/presentation/protocols/verify-email";
 
 describe("Authentication Controller", () => {
+  const makeFindByEmailStub = (): findByEmail => {
+    class FindByEmail implements findByEmail {
+      async verify(email: string): Promise<Account> {
+        return {
+          id: "any_id",
+          email: "any@gmail.com",
+          name: "any_name",
+          password: "any_password",
+        };
+      }
+    }
+    return new FindByEmail();
+  };
   const makeEmailValidatorStub = (): EmailValidator => {
     class EmailValidatorStub implements EmailValidator {
       validate(email: string): boolean {
@@ -12,9 +27,11 @@ describe("Authentication Controller", () => {
   };
   const makeSut = () => {
     const emailValidator = makeEmailValidatorStub();
+    const findByEmailStub = makeFindByEmailStub();
     return {
+      findByEmailStub,
       emailValidator,
-      sut: new AuthController(emailValidator),
+      sut: new AuthController(emailValidator, findByEmailStub),
     };
   };
   test("should return bad request if no body is provided", async () => {
@@ -62,7 +79,6 @@ describe("Authentication Controller", () => {
     await sut.handle(fakeData);
     expect(spy).toHaveBeenCalledWith(fakeData.body.email);
   });
-
   test("should return bad request if EmailValidator return false", async () => {
     const { sut, emailValidator } = makeSut();
     const fakeData = {
@@ -91,5 +107,17 @@ describe("Authentication Controller", () => {
     const response = await sut.handle(fakeData);
     expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({ error: "invalid password" });
+  });
+  test("should call EmailVerify with correct value", async () => {
+    const { sut, findByEmailStub } = makeSut();
+    const fakeData = {
+      body: {
+        email: "correct@gmail.com",
+        password: "12345678",
+      },
+    };
+    const spy = jest.spyOn(findByEmailStub, "verify");
+    await sut.handle(fakeData);
+    expect(spy).toHaveBeenCalledWith(fakeData.body.email);
   });
 });

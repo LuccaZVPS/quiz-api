@@ -9,3 +9,6 @@ export const ok = (text?: string): httpResponse => {
 export const conflict = (errorText: string): httpResponse => {
   return { body: { error: errorText }, statusCode: 409 };
 };
+export const notFound = (errorText?: string): httpResponse => {
+  return { body: { error: errorText }, statusCode: 404 };
+};

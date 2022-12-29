@@ -108,7 +108,7 @@ describe("Authentication Controller", () => {
     expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({ error: "invalid password" });
   });
-  test("should call EmailVerify with correct value", async () => {
+  test("should call findByEmail with correct value", async () => {
     const { sut, findByEmailStub } = makeSut();
     const fakeData = {
       body: {
@@ -119,5 +119,19 @@ describe("Authentication Controller", () => {
     const spy = jest.spyOn(findByEmailStub, "verify");
     await sut.handle(fakeData);
     expect(spy).toHaveBeenCalledWith(fakeData.body.email);
+  });
+  test("should return notFound if findByEmail return false", async () => {
+    const { sut, findByEmailStub } = makeSut();
+    const fakeData = {
+      body: {
+        email: "correct@gmail.com",
+        password: "12345678",
+      },
+    };
+    jest.spyOn(findByEmailStub, "verify").mockImplementationOnce(async () => {
+      return false;
+    });
+    const response = await sut.handle(fakeData);
+    expect(response.statusCode).toEqual(404);
   });
 });

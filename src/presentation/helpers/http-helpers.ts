@@ -12,3 +12,6 @@ export const conflict = (errorText: string): httpResponse => {
 export const notFound = (errorText?: string): httpResponse => {
   return { body: { error: errorText }, statusCode: 404 };
 };
+export const internalError = (errorText: string): httpResponse => {
+  return { body: { error: errorText }, statusCode: 500 };
+};

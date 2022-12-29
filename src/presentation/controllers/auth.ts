@@ -17,6 +17,16 @@ export class AuthController implements Controller {
     }
     const { email, password } = response.body;
     const isEmail = this.emailValidator.validate(email);
+    if (!isEmail) {
+      return badRequest("invalid email");
+    }
+    if (
+      typeof password !== "string" ||
+      password.length < 8 ||
+      password.length > 22
+    ) {
+      return badRequest("invalid password");
+    }
     return ok();
   }
 }

@@ -4,5 +4,5 @@ export interface CreateJWTModel {
   id: string;
 }
 export interface CreateJWT {
-  create: (arg: CreateJWTModel) => Promise<string>;
+  create: (arg: CreateJWTModel) => string;
 }

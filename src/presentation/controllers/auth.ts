@@ -46,7 +46,7 @@ export class AuthController implements Controller {
       if (emailExist.password !== password) {
         return notFound("email or password incorrect");
       }
-      const jwtToken = await this.createJWT.create({
+      const jwtToken = this.createJWT.create({
         email: emailExist.email,
         name: emailExist.name,
         id: emailExist.id,

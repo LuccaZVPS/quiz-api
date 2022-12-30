@@ -21,7 +21,7 @@ export class AccountRepository implements AddAccountRepository, findByEmail {
   async find(email: string): Promise<false | Account> {
     const collection = MongoHelper.getCollection(this.collectionName);
     const account = await collection.findOne({ email });
-    if (!account._id) {
+    if (!account) {
       return false;
     }
     return account as unknown as Account;

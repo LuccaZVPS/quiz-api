@@ -25,4 +25,19 @@ describe("JWT Adapter", () => {
       process.env.SECRET
     );
   });
+
+  test("should throws if jswonwebtoken throws", () => {
+    const { jwtAdapter } = makeSut();
+    jest.spyOn(jwt, "sign").mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    expect(() => {
+      jwtAdapter.create({
+        email: "any@gmail.com",
+        name: "any",
+        id: "any_id",
+      });
+    }).toThrow();
+  });
 });

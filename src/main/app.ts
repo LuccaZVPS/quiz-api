@@ -1,5 +1,7 @@
 import express, { Application, urlencoded } from "express";
 import accountRoutes from "./routes/account/index";
+import dotenv from "dotenv";
+dotenv.config();
 class App {
   app: Application;
   constructor() {

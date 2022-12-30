@@ -6,6 +6,6 @@ export class EmailVerify implements findByEmail {
   constructor(private findByEmail: findUserWithEmail) {}
   async verify(email: string): Promise<false | Account> {
     const account = await this.findByEmail.find(email);
-    return false;
+    return account;
   }
 }

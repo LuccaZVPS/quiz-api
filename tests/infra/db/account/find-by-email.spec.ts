@@ -31,4 +31,9 @@ describe("FindByEmail", () => {
     expect(account.email).toBe("luccazvps@gmail.com");
     expect(account.password).toBe("as4a5da4sd5");
   });
+  test("should return false if account not exist", async () => {
+    const { findByEmail } = makeSut();
+    const account = await findByEmail.find("notRegistred@gmail.com");
+    expect(account).toBe(false);
+  });
 });

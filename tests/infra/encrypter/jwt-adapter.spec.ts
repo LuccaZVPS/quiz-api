@@ -40,4 +40,18 @@ describe("JWT Adapter", () => {
       });
     }).toThrow();
   });
+
+  test("should return a token", () => {
+    const { jwtAdapter } = makeSut();
+    jest.spyOn(jwt, "sign").mockImplementationOnce(() => {
+      return "token";
+    });
+
+    const token = jwtAdapter.create({
+      email: "any@gmail.com",
+      name: "any",
+      id: "any_id",
+    });
+    expect(token).toBe("token");
+  });
 });

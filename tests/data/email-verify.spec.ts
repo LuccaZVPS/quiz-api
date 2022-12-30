@@ -24,4 +24,16 @@ describe("EmailVerify", () => {
     await emailVerify.verify("any@gmail.com");
     expect(spy).toBeCalledWith("any@gmail.com");
   });
+
+  test("should throw if findByEmailThrows", async () => {
+    const { emailVerify, findByEmailStub } = makeSut();
+    const spy = jest
+      .spyOn(findByEmailStub, "find")
+      .mockImplementationOnce(async () => {
+        throw new Error();
+      });
+    expect(async () => {
+      await emailVerify.verify("any@gmail.com");
+    }).rejects.toThrow();
+  });
 });

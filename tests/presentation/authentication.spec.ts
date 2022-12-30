@@ -10,7 +10,7 @@ import {
 describe("Authentication Controller", () => {
   const makeCreateJWT = (): createJWTInterface => {
     class CreateJWT implements createJWTInterface {
-      async create(arg: CreateJWTModel): Promise<string> {
+      create(arg: CreateJWTModel): string {
         return "valid_jwt";
       }
     }

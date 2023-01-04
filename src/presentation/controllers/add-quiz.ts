@@ -7,6 +7,12 @@ export class AddQuizController implements Controller {
     if (!args.body) {
       return badRequest("body not provided");
     }
+    const fields = ["name", "categories", "questions", "correct"];
+    for (var field of fields) {
+      if (!args.body[field]) {
+        return badRequest(`quiz ${field} not provided`);
+      }
+    }
     return ok();
   }
 }

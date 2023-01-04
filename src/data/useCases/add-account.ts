@@ -1,7 +1,7 @@
 import {
   AddAccount as AddAccountInterface,
   AddAccountModel,
-} from "../../../src/domain/useCases/add-account";
+} from "../../domain/useCases/add-account";
 import { AddAccountRepository } from "../protocols/addAccountRepository";
 import { Encrypter } from "../protocols/encrypter";
 export class AddAccount implements AddAccountInterface {

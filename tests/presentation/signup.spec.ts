@@ -1,9 +1,6 @@
 import { SignUpController } from "../../src/presentation/controllers/signup";
 import { EmailValidator } from "../../src/presentation/protocols/email-validator";
-import {
-  AddAccount,
-  AddAccountModel,
-} from "../../src/domain/useCases/add-account";
+import { AddAccount, AddAccountModel } from "../domain/useCases/add-account";
 
 describe("Signup Controller", () => {
   const makeEmailValidatorStub = () => {

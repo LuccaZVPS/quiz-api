@@ -1,3 +1,10 @@
+interface AddQuizModel {
+  name: string;
+  categories: string[];
+  questions: questions[];
+  correct: number;
+}
+
 export interface AddQuiz {
-  add: (quiz: quiz) => Promise<boolean>;
+  add: (quiz: AddQuizModel) => Promise<boolean>;
 }
